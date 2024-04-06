@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% block header %}
+
   <style>
         .node {
             cursor: pointer;
@@ -19,9 +19,9 @@
      
    
   </style>
-{% endblock header %}
-{% block content %}
-  <svg width="100%" height="1000" id="svg-{{ name }}">
+
+
+  <svg width="100%" height="1000" id="svg-simple_graph_visualizer">
   </svg>
   <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
   <div id="tooltip"
@@ -37,21 +37,111 @@
               min-width: 100px"></div>
   <script>
     var nodes = [
-      {% for n in nodes %}
+      
       {
-        id:"{{n.id}}", 
-        name:"{{n.name}}",
+        id:"1", 
+        name:"A",
       },
-      {% endfor %}
+      
+      {
+        id:"2", 
+        name:"B",
+      },
+      
+      {
+        id:"3", 
+        name:"C",
+      },
+      
+      {
+        id:"4", 
+        name:"DANAS",
+      },
+      
+      {
+        id:"5", 
+        name:"E",
+      },
+      
+      {
+        id:"6", 
+        name:"F",
+      },
+      
+      {
+        id:"7", 
+        name:"G",
+      },
+      
+      {
+        id:"8", 
+        name:"H",
+      },
+      
+      {
+        id:"9", 
+        name:"I",
+      },
+      
+      {
+        id:"10", 
+        name:"J",
+      },
+      
       ];
       
     var links = [
-        {% for e in edges %}
+        
         {
-            source:"{{ e.source_node.id }}",
-            target:"{{ e.destination_node.id }}",
+            source:"1",
+            target:"2",
         },
-        {% endfor %}
+        
+        {
+            source:"3",
+            target:"4",
+        },
+        
+        {
+            source:"9",
+            target:"9",
+        },
+        
+        {
+            source:"5",
+            target:"1",
+        },
+        
+        {
+            source:"2",
+            target:"3",
+        },
+        
+        {
+            source:"6",
+            target:"7",
+        },
+        
+        {
+            source:"4",
+            target:"5",
+        },
+        
+        {
+            source:"10",
+            target:"10",
+        },
+        
+        {
+            source:"8",
+            target:"6",
+        },
+        
+        {
+            source:"7",
+            target:"8",
+        },
+        
     ];
 
     links = links.map(link => ({
@@ -60,7 +150,7 @@
         target: nodes.find(n => n.id === link.target),
     }));
 
-    var svg=d3.select('#svg-{{ name }}');
+    var svg=d3.select('#svg-simple_graph_visualizer');
 
     svg.append("svg:defs")
     .append("svg:marker")
@@ -88,7 +178,7 @@
     const handleZoom = (e) => g.attr('transform', e.transform);
     const zoom = d3.zoom().on('zoom', handleZoom);
 
-    var g = d3.select('#svg-{{ name }}').call(zoom).append('g');
+    var g = d3.select('#svg-simple_graph_visualizer').call(zoom).append('g');
 
 
     var tooltip = d3.select("#tooltip");
@@ -119,9 +209,9 @@
     .append("path")
     .on('mouseover', displayTooltip)
     .on('mouseout', hideTooltip)
-    {% if directed %}
+    
     .attr("marker-end", "url(#arrow)")
-    {% endif %}
+    
     .attr("class", "link");
 
     var node = g.selectAll('.node')
@@ -238,4 +328,3 @@
 
 
   </script>
-{% endblock content %}
