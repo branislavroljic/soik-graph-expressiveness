@@ -1,0 +1,424 @@
+
+  <style>
+        .node {
+            cursor: pointer;
+            fill:rgb(230, 238, 238);
+            border : 1px solid black;
+          }
+      
+      
+          .link {
+            stroke: #0f0;
+            fill: none;
+            stroke-width: 2px;
+          }
+    .selected {
+        fill: rgb(209, 231, 12);
+    }
+     
+   
+  </style>
+
+
+  <svg width="100%" height="100%" id="svg-block_graph_visualizer">
+  </svg>
+  
+  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+  <div id="tooltip"
+       class="tooltip"
+       style="position: absolute;
+              display: none;
+              padding: 10px;
+              background: rgba(0, 0, 0, 0.6);
+              color: white;
+              border-radius: 5px;
+              font-size: 16px;
+              pointer-events: none;
+              min-width: 100px"></div>
+  <script>
+  var nodes = [
+        
+        {
+        id:"1", 
+        name:"A",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descA&lt;br&gt;",
+        data : {"desc": "descA", "name": "A", "type": "typeA"}
+        },
+        
+        {
+        id:"2", 
+        name:"B",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descB&lt;br&gt;",
+        data : {"desc": "descB", "name": "B", "type": "typeA"}
+        },
+        
+        {
+        id:"3", 
+        name:"C",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descC&lt;br&gt;",
+        data : {"desc": "descC", "name": "C", "type": "typeA"}
+        },
+        
+        {
+        id:"4", 
+        name:"DANAS",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeDANAS&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descDANAS&lt;br&gt;",
+        data : {"desc": "descDANAS", "name": "DANAS", "type": "typeDANAS"}
+        },
+        
+        {
+        id:"5", 
+        name:"E",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descE&lt;br&gt;",
+        data : {"desc": "descE", "name": "E", "type": "typeA"}
+        },
+        
+        {
+        id:"6", 
+        name:"F",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descF&lt;br&gt;",
+        data : {"desc": "descF", "name": "F", "type": "typeA"}
+        },
+        
+        {
+        id:"7", 
+        name:"G",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descG&lt;br&gt;",
+        data : {"desc": "descG", "name": "G", "type": "typeA"}
+        },
+        
+        {
+        id:"8", 
+        name:"H",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descH&lt;br&gt;",
+        data : {"desc": "descH", "name": "H", "type": "typeA"}
+        },
+        
+        {
+        id:"9", 
+        name:"I",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;desci&lt;br&gt;",
+        data : {"desc": "desci", "name": "I", "type": "typeA"}
+        },
+        
+        {
+        id:"10", 
+        name:"J",
+        description : "&lt;strong&gt;type: &lt;/strong&gt;typeA&lt;br&gt;&lt;strong&gt;desc: &lt;/strong&gt;descj&lt;br&gt;",
+        data : {"desc": "descj", "name": "J", "type": "typeA"}
+        },
+        
+    ];
+
+    var links = [
+        
+        {
+            source:"1",
+            target:"2",
+        },
+        
+        {
+            source:"3",
+            target:"4",
+        },
+        
+        {
+            source:"9",
+            target:"9",
+        },
+        
+        {
+            source:"5",
+            target:"1",
+        },
+        
+        {
+            source:"2",
+            target:"3",
+        },
+        
+        {
+            source:"6",
+            target:"7",
+        },
+        
+        {
+            source:"4",
+            target:"5",
+        },
+        
+        {
+            source:"10",
+            target:"10",
+        },
+        
+        {
+            source:"8",
+            target:"6",
+        },
+        
+        {
+            source:"7",
+            target:"8",
+        },
+        
+    ];
+
+    links = links.map(link => ({
+        ...link,
+        source: nodes.find(n => n.id === link.source),
+        target: nodes.find(n => n.id === link.target),
+    }));
+
+    var svg=d3.select('#svg-block_graph_visualizer');
+
+    svg.append("svg:defs")
+    .append("svg:marker")
+    .attr("id", "arrow")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 0)
+    .attr("refY", 5)
+    .attr("markerUnits", "strokeWidth")
+    .attr("markerWidth", 8)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("svg:path").
+    attr("d", "M 0 0 L 10 5 L 0 10 z");
+
+    const simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink().links(links).distance(300))
+    .force("charge", d3.forceManyBody().strength(100))
+    .force("center", d3.forceCenter(700 / 2, 700 / 2))
+    .force("gravity", d3.forceManyBody().strength(-100))
+    .force("collide", d3.forceCollide().radius(80))
+    .on("tick", tick);
+
+
+    
+    const handleZoom = (e) => g.attr('transform', e.transform);
+    const zoom = d3.zoom().on('zoom', handleZoom);
+
+    var g = d3.select('#svg-block_graph_visualizer').call(zoom).append('g');
+
+
+    var tooltip = d3.select("#tooltip");
+
+    function displayTooltip(event, d) {
+      var dataStrings = Object.entries(d.data).map(function([key, value]) {
+        return `${key}: ${value}`;
+      });
+
+      var tooltipText = dataStrings.join("<br>");
+
+      tooltip
+        .html(tooltipText)
+        .style('display', 'inline-block')
+        .style('left', (event.pageX + 10) + 'px')
+        .style('top', (event.pageY + 10) + 'px');
+    }
+
+    function hideTooltip() {
+      tooltip.style('display', 'none');
+    }
+
+   
+    // add the links
+    const link = g.selectAll(".link")
+    .data(links)
+    .enter()
+    .append("path")
+    .on('mouseover', displayTooltip)
+    .on('mouseout', hideTooltip)
+    
+    .attr("marker-end", "url(#arrow)")
+    
+    .attr("class", "link");
+
+    var node = g.selectAll('.node')
+    .data(nodes)
+    .enter()
+    .append('g')
+    .attr('class', 'node')
+    .attr('id', n => "node_" + n.id)
+    .call(drag(simulation));
+
+    d3.selectAll('.node').each(n => complexView(n));
+
+    // https://stackoverflow.com/questions/35768178/how-to-add-link-name-on-the-line-d3-js
+    var oneLink = link.append('line')
+        .style("stroke-width", 3.5);
+
+
+    // naziv grane
+    var linkLabel = link.append("text")
+        .attr("class","link-label")
+        .attr("dy", ".20em")
+        .attr("text-anchor", "middle")
+        .attr("stroke","black")
+        .text(function(d){
+        return d.edge_name;
+        })
+        .attr("x",function(d){
+            return ((d.source.x + d.target.x)/2);
+        })
+        .attr("y", function(d){
+            return ((d.source.y + d.target.y)/2);
+        });
+
+    
+
+    d3.selectAll('.node').each(n => complexView(n));
+
+    function complexView(node){
+
+        var nodeGroup = d3.select("g#node_"+node.id);
+        var nameLength = node.name.length;
+        var keys = Object.keys(node.data).filter(key => key !== "name");
+        var textSize=10;
+        var lineHeight = 15; 
+
+        var totalHeightNeeded = textSize + ((1 + keys.length) * lineHeight);
+        var rectWidth = Math.max(100, nameLength * 25);
+        var rectHeight = Math.max(30, totalHeightNeeded + 10);
+        
+       // Append rectangle
+       nodeGroup.append('rect')
+       .attr('width', rectWidth)
+       .attr('height', rectHeight)
+       .attr('x', -rectWidth / 2)
+       .attr('y', -rectHeight / 2)
+       .style('fill', 'white')
+       .style("stroke", "#9ecae1")
+       .style('stroke-width', '1.5px');
+
+   var startYPosition = -rectHeight / 2 + (rectHeight - totalHeightNeeded) / 2 + textSize;
+
+   // Append name text first
+   nodeGroup.append('text')
+       .attr('text-anchor', 'middle')
+       .attr('x', 0)
+       .attr('y', startYPosition)
+       .attr('font-size', textSize + 'px')
+       .attr('font-family', 'sans-serif')
+       .attr('fill', '#9ecae1')
+       .text(node.name);
+
+        // Append divider line
+    nodeGroup.append('line')
+    .attr('x1', -rectWidth / 2)
+    .attr('y1', startYPosition + lineHeight / 2)
+    .attr('x2', rectWidth / 2)
+    .attr('y2', startYPosition + lineHeight / 2)
+    .style('stroke', '#ccc')
+    .style('stroke-width', '1px');
+
+     // Add padding after the divider
+     startYPosition += lineHeight; // Increase startYPosition by lineHeight
+
+   // Append data texts below the name text
+   keys.forEach((key, index) => {
+       nodeGroup.append('text')
+           .attr('text-anchor', 'middle')
+           .attr('x', 0)
+           .attr('y', startYPosition + (lineHeight * (index + 1)))
+           .attr('font-size', textSize + 'px')
+           .attr('font-family', 'sans-serif')
+           .attr('fill', 'gray')
+           .html(function() {
+            return "<tspan font-weight='bold' font-size='12'>" + key + ":</tspan> " + node.data[key];
+        });
+   });
+    }
+
+    function tick() {
+
+        textSize=15;
+        var arrowheadLength = 8;
+  
+
+        var node = g.selectAll('.node');
+        var link = g.selectAll(".link");
+
+       node.attr("transform", d => "translate(" + d.x + "," + d.y + ")")
+            
+      
+       var textSize=10;
+       var lineHeight = 15; 
+
+      
+       
+       
+    link.attr("d", function (d) {
+      var keys = Object.keys(d.target.data).filter(key => key !== "name");
+      var totalHeightNeeded = textSize + ((1 + keys.length) * lineHeight);
+      var x1 = d.source.x,
+        y1 = d.source.y,
+        x2 = d.target.x,
+        y2 = d.target.y,
+        dx = x2 - x1,
+        dy = y2 - y1,
+        angle = Math.atan2(y2 - y1, x2 - x1),
+        radius = d.target.name.length + 25,
+        dr = Math.sqrt(dx * dx + dy * dy),
+        targetX = x2 - Math.cos(angle) * ( Math.max(100, d.target.name.length * 25)/2 + 1.5*arrowheadLength),
+        targetY = y2 - Math.sin(angle) * (  Math.max(30, totalHeightNeeded + 10)/2 + arrowheadLength),
+
+        // Defaults for normal edge.
+        drx = dr,
+        dry = dr,
+        xRotation = 0, // degrees
+        largeArc = 0,
+        sweep = 1;
+
+      // Self edge
+      if (x1 === x2 && y1 === y2) {
+        // Fiddle with this angle to get loop oriented.
+        xRotation = -45;
+
+        // Needs to be 1.
+        largeArc = 1;
+
+        // Change sweep to change orientation of loop. 
+        //sweep = 0;
+
+        // Make drx and dry different to get an ellipse
+        // instead of a circle.
+        drx = 30;
+        dry = 20;
+
+      }
+
+      return "M" + x1 + "," + y1 + "A" + drx + "," + dry + " " + xRotation + "," + largeArc + "," + sweep + " " + targetX + "," + targetY
+    });
+
+          
+    }
+  
+    
+  
+    function drag(simulation) {    
+      function dragstarted(event) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+      }
+      
+      function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+      }
+      
+      function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+      }
+      
+      return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+  }
+
+
+  </script>
