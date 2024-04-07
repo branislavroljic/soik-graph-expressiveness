@@ -43,20 +43,11 @@ class BlockGraphVisualizer(VisualizerService):
             node_data = {
                 "id": node.id,
                 "name": node.data["name"] if "name" in node.data else "N/A",
-                "description": "",
                 "data": node.data,
             }
 
             print(node.data)
-            for key in node.data:
-                if key != "name":
-                    node_data["description"] += (
-                        "<strong>"
-                        + str(key)
-                        + ": </strong>"
-                        + str(node.data[key])
-                        + "<br>"
-                    )
+           
             nodes.append(node_data)
         return nodes
 
