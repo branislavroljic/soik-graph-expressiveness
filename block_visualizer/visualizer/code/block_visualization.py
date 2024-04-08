@@ -46,8 +46,6 @@ class BlockGraphVisualizer(VisualizerService):
                 "data": node.data,
             }
 
-            print(node.data)
-           
             nodes.append(node_data)
         return nodes
 
@@ -55,23 +53,9 @@ class BlockGraphVisualizer(VisualizerService):
         edges = []
         for edge in graph.edges:
             edge_data = {
-                # "description": "",
                 "source_node": edge.source,
                 "destination_node": edge.destination,
             }
-            # for attribute in edge.data:
-            #     if attribute.name != "name":
-            #         d["description"] += (
-            #             "<strong>"
-            #             + str(attribute.name)
-            #             + ": </strong>"
-            #             + str(attribute.value)
-            #             + "<br>"
-            #         )
-            #     else:
-            #         d[attribute.name] = attribute.value
-            # if "name" not in d.keys():
-            #     d["name"] = edge.id
             edges.append(edge_data)
         return edges
 
