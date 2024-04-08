@@ -42,7 +42,7 @@ class BlockGraphVisualizer(VisualizerService):
 
             node_data = {
                 "id": node.id,
-                "name": node.data["name"] if "name" in node.data else "N/A",
+                "name": node.data.pop("name", "N/A"),
                 "data": node.data,
             }
 

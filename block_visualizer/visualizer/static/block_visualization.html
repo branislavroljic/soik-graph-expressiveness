@@ -128,7 +128,7 @@
 
     var nodeGroup = d3.select("g#node_" + node.id);
     var nameLength = node.name.length;
-    var keys = Object.keys(node.data).filter(key => key !== "name");
+    var keys = Object.keys(node.data);
     var textSize = 10;
     var lineHeight = 15;
 

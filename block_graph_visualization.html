@@ -25,61 +25,61 @@
   {
     id: "1",
       name: "A",
-        data : {"desc": "descA", "name": "A", "type": "typeA"}
+        data : {"desc": "descA", "type": "typeA"}
   },
   
   {
     id: "2",
       name: "B",
-        data : {"desc": "descB", "name": "B", "type": "typeA"}
+        data : {"desc": "descB", "type": "typeA"}
   },
   
   {
     id: "3",
       name: "C",
-        data : {"desc": "descC", "name": "C", "type": "typeA"}
+        data : {"desc": "descC", "type": "typeA"}
   },
   
   {
     id: "4",
       name: "DANAS",
-        data : {"desc": "descDANAS", "name": "DANAS", "type": "typeDANAS"}
+        data : {"desc": "descDANAS", "type": "typeDANAS"}
   },
   
   {
     id: "5",
       name: "E",
-        data : {"desc": "descE", "name": "E", "type": "typeA"}
+        data : {"desc": "descE", "type": "typeA"}
   },
   
   {
     id: "6",
       name: "F",
-        data : {"desc": "descF", "name": "F", "type": "typeA"}
+        data : {"desc": "descF", "type": "typeA"}
   },
   
   {
     id: "7",
       name: "G",
-        data : {"desc": "descG", "name": "G", "type": "typeA"}
+        data : {"desc": "descG", "type": "typeA"}
   },
   
   {
     id: "8",
       name: "H",
-        data : {"desc": "descH", "name": "H", "type": "typeA"}
+        data : {"desc": "descH", "type": "typeA"}
   },
   
   {
     id: "9",
       name: "I",
-        data : {"desc": "desci", "name": "I", "type": "typeA"}
+        data : {"desc": "desci", "type": "typeA"}
   },
   
   {
     id: "10",
       name: "J",
-        data : {"desc": "descj", "name": "J", "type": "typeA"}
+        data : {"desc": "descj", "type": "typeA"}
   },
   
     ];
@@ -227,7 +227,7 @@
 
     var nodeGroup = d3.select("g#node_" + node.id);
     var nameLength = node.name.length;
-    var keys = Object.keys(node.data).filter(key => key !== "name");
+    var keys = Object.keys(node.data);
     var textSize = 10;
     var lineHeight = 15;
 
