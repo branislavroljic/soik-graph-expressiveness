@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Index - {{ block.super }}{% endblock %}
+
+{% block header %}Welcome to the Index Page{% endblock %}
+
+{% block content %}
+    <p>Hello, {{ name }}!</p>
+    {{ simple_visualizer|safe|escape }}
+{% endblock %}

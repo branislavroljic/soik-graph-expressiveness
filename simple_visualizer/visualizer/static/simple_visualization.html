@@ -1,0 +1,231 @@
+{% block header %}
+  <style>
+        .node {
+            cursor: pointer;
+            fill:rgb(230, 238, 238);
+            border : 1px solid black;
+          }
+      
+      
+          .link {
+            stroke: #0f0;
+            fill: none;
+            stroke-width: 2px;
+          }
+    .selected {
+        fill: rgb(209, 231, 12);
+    }
+     
+   
+  </style>
+{% endblock header %}
+{% block content %}
+  <svg width="100%" height="100%" id="svg-{{ name }}">
+  </svg>
+  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+  <script>
+    var nodes = [
+      {% for n in nodes %}
+      {
+        id:"{{n.id}}", 
+        name:"{{n.name}}",
+      },
+      {% endfor %}
+      ];
+      
+    var links = [
+        {% for e in edges %}
+        {
+            source:"{{ e.source_node.id }}",
+            target:"{{ e.destination_node.id }}",
+        },
+        {% endfor %}
+    ];
+
+    links = links.map(link => ({
+        ...link,
+        source: nodes.find(n => n.id === link.source),
+        target: nodes.find(n => n.id === link.target),
+    }));
+
+    var svg=d3.select('#svg-{{ name }}');
+
+    svg.append("svg:defs")
+    .append("svg:marker")
+    .attr("id", "arrow")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 0)
+    .attr("refY", 5)
+    .attr("markerUnits", "strokeWidth")
+    .attr("markerWidth", 8)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("svg:path").
+    attr("d", "M 0 0 L 10 5 L 0 10 z");
+
+    const simulation = d3.forceSimulation(nodes)
+    .force("link", d3.forceLink().links(links).distance(300))
+    .force("charge", d3.forceManyBody().strength(100))
+    .force("center", d3.forceCenter(700 / 2, 700 / 2))
+    .force("gravity", d3.forceManyBody().strength(-100))
+    .force("collide", d3.forceCollide().radius(80))
+    .on("tick", tick);
+
+
+    
+    const handleZoom = (e) => g.attr('transform', e.transform);
+    const zoom = d3.zoom().on('zoom', handleZoom);
+
+    var g = d3.select('#svg-{{ name }}').call(zoom).append('g');
+   
+    // add the links
+    const link = g.selectAll(".link")
+    .data(links)
+    .enter()
+    .append("path")
+    {% if directed %}
+    .attr("marker-end", "url(#arrow)")
+    {% endif %}
+    .attr("class", "link");
+
+    var node = g.selectAll('.node')
+    .data(nodes)
+    .enter()
+    .append('g')
+    .attr('class', 'node')
+    .attr('id', n => "node_" + n.id)
+    .call(drag(simulation))
+    .on('click', clicked);
+
+    d3.selectAll('.node').each(n => simpleView(n));
+
+    function simpleView(node){
+      textSize=15;
+      radius = 25;
+    
+        d3.select("g#node_"+node.id).append('circle')
+        .attr("r", n => n.name.length + radius)
+        .attr('x',0).attr('y',0);
+        
+        d3.select("g#node_"+node.id).append('text')
+        .attr('x',0)
+        .attr('y',0)
+        .attr('font-size',textSize)
+        .attr('font-family','sans-serif')
+        .attr('text-anchor','middle')
+        .attr('fill', 'black')
+        .text(node.name);
+
+    }
+
+    function tick() {
+
+        textSize=15;
+        radius = 20;
+        var arrowheadLength = 8;
+  
+
+        var node = g.selectAll('.node');
+        var link = g.selectAll(".link");
+
+        node.attr("transform", d => "translate(" + d.x + "," + d.y + ")")
+            
+    
+       
+        link.attr("d", function(d) {
+          var x1 = d.source.x,
+              y1 = d.source.y,
+              x2 = d.target.x,
+              y2 = d.target.y,
+              dx = x2 - x1,
+              dy = y2 - y1,
+              angle = Math.atan2(y2 - y1, x2 - x1),
+              radius = d.target.name.length + 25,
+              dr = Math.sqrt(dx * dx + dy * dy),
+              targetX = x2 - Math.cos(angle) * (radius + arrowheadLength),
+              targetY = y2 - Math.sin(angle) * (radius + arrowheadLength),
+        
+              // Defaults for normal edge.
+              drx = dr,
+              dry = dr,
+              xRotation = 0, // degrees
+              largeArc = 0, 
+              sweep = 1; 
+        
+              // Self edge
+              if ( x1 === x2 && y1 === y2 ) {
+                // Fiddle with this angle to get loop oriented.
+                xRotation = -45;
+        
+                // Needs to be 1.
+                largeArc = 1;
+        
+                // Change sweep to change orientation of loop. 
+                //sweep = 0;
+        
+                // Make drx and dry different to get an ellipse
+                // instead of a circle.
+                drx = 30;
+                dry = 20;
+              
+              } 
+        
+          return "M" + x1 + "," + y1 + "A" + drx + "," + dry + " " + xRotation + "," + largeArc + "," + sweep + " " + targetX + "," + targetY
+        });
+          
+    }
+  
+    
+  
+    function drag(simulation) {    
+      function dragstarted(event) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+      }
+      
+      function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+      }
+      
+      function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+      }
+      
+      return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+    }
+
+    let selectedNodeId = null;
+
+   // Function to handle node click
+  function clicked(event, node) {
+    var clickedNode = d3.select(this);
+
+    // Deselect previously selected node if exists
+    if (selectedNodeId !== null) {
+        d3.select("#node_" + selectedNodeId)
+            .select('circle')
+            .attr('fill', 'rgb(230, 238, 238)'); // Reset fill color to default
+    }
+
+    // Select the clicked node and change its fill color to red
+    clickedNode.select('circle')
+        .attr('fill', 'red');
+
+    // Update the selectedNodeId to the currently clicked node's ID
+    selectedNodeId = node.id;
+
+    // Dispatch custom event when node is clicked
+    var nodeClickedEvent = new CustomEvent('nodeClicked', { detail: { nodeId: node.id } });
+    document.dispatchEvent(nodeClickedEvent);
+  }
+
+
+  </script>
+{% endblock content %}

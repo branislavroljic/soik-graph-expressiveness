@@ -1,0 +1,7 @@
+{
+  "python.analysis.extraPaths": ["./api_soik/src"],
+  "emmet.includeLanguages": {
+    "django-html": "html",
+    "jinja-html": "html"
+  }
+}
