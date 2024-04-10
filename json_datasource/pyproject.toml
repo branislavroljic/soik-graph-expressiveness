@@ -12,5 +12,5 @@ authors = [
     {name = "Ruzica Dosenovic"}
 ]
 
-[project.entry-points."json_datasource"]
+[project.entry-points."datasources"]
 json_datasource="src.json_parser.parser:JSONParser"
