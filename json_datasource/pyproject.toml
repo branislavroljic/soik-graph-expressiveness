@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "json_datasource"
+dynamic = ["version"]
+dependencies =[ 
+]
+requires-python = ">= 3.10"
+authors = [
+    {name = "Ruzica Dosenovic"}
+]
+
+[project.entry-points."datasources"]
+json_datasource="src.json_parser.parser:JSONParser"
