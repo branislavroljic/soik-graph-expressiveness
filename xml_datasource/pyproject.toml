@@ -1,18 +1,16 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "xml-datasource"
 dynamic = ["version"]
-
-dependencies = [
-    "requests==2.31.0",
-    "beautifulsoup4==4.12.3",
-    "selenium==3.3.0",
-    "webdriver-manager==4.0.1",
+dependencies =[ 
 ]
 requires-python = ">= 3.10"
-
 authors = [
     {name = "Nikola Jovic"},
 ]
 
 [project.entry-points."datasources"]
-xml = "xml_parser.parser:XMLParser"
+xml_datasource = "src.xml_parser.parser:XMLParser"
