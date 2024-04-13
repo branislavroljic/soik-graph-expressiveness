@@ -37,3 +37,17 @@ class Graph:
     @property
     def directed(self) -> bool:
         return self._directed
+    
+    def remove_duplicates_in_edges(self):
+        duplicates = []
+        duplicates_id = []
+        new_edges = self._edges
+        for edge in self._edges:
+            print(edge.id)
+            for new_edge in new_edges:
+                if edge.equal_undirected(new_edge) and new_edge.id not in duplicates_id:
+                    duplicates.append(edge)
+                    duplicates_id.append(edge.id)
+                    break
+        for edge in duplicates:
+            self._edges.remove(edge)

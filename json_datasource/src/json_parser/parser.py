@@ -1,7 +1,7 @@
 import json
 import os
-from apl.graph.models import Graph, Node, Edge
-from apl.graph.services.loader import Parser
+from api_soik.src.api.models import Graph, Node, Edge
+from api_soik.src.api.services import Parser
 
 
 def get_absolute_path(path):
