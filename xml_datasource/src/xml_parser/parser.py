@@ -1,7 +1,9 @@
 import os
 import xml.etree.ElementTree as ET
-from apl.graph.models import Graph, Node, Edge
-from apl.graph.services.loader import Parser
+from api.models.graph import Graph
+from api.models.node import Node
+from api.models.edge import Edge
+from api.services.loader import Parser
 
 def get_absolute_path(path):
     return os.path.join(os.path.dirname(__file__), "..", "..", "..", "data", path)
