@@ -1,10 +1,119 @@
 {% extends 'base.html' %}
-
 {% block title %}Index - {{ block.super }}{% endblock %}
-
 {% block header %}Welcome to the Index Page{% endblock %}
-
 {% block content %}
-    <p>Hello, {{ name }}!</p>
-    {{ simple_visualizer|safe|escape }}
+    {% comment %} <p>Hello, {{ name }}!</p> {% endcomment %}
+    {% comment %} {{ simple_visualizer|safe|escape }} {% endcomment %}
+    <section class="columns is-fullheight">
+        <aside class="column is-3 is-narrow-mobile is-fullheight section is-hidden-mobile">
+            <p class="menu-label is-hidden-touch">Workspaces</p>
+            <ul class="menu-list">
+                <li>
+                    <a href="#" class="">
+                        <div class="card is-selected">
+                            <header class="card-header  is-flex is-align-items-center is-justify-content-center">
+                                <p class="card-header-title">Card Title</p>
+                                <div class="is-flex pr-2">
+                                    <a href="#" class="card-header-icon" aria-label="edit">
+                                        <span class="icon">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-header-icon" aria-label="delete">
+                                        <span class="icon  has-text-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </header>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="">
+                        <div class="card">
+                            <header class="card-header  is-flex is-align-items-center is-justify-content-center">
+                                <p class="card-header-title">Card Title</p>
+                                <div class="is-flex pr-2">
+                                    <a href="#" class="card-header-icon" aria-label="edit">
+                                        <span class="icon">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    </a>
+                                    <a href="#" class="card-header-icon" aria-label="delete">
+                                        <span class="icon  has-text-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </header>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <div class="vertical-container column  mt-5 is-fullheight is-3 ">
+            <nav class="panel">
+                <p class="panel-heading has-text-black has-background-light">Visualizer</p>
+                <div class="panel-block">
+                    <div class="select is-rounded is-fullwidth">
+                        <select>
+                            <option>Simple visualizer</option>
+                            <option>Block visualizer</option>
+                        </select>
+                    </div>
+                </div>
+            </nav>
+            <nav class="panel">
+                <p class="panel-heading has-text-black has-background-light">Tree View</p>
+                <div class="panel-block"></div>
+            </nav>
+            <nav class="panel">
+                <p class="panel-heading has-text-black has-background-light">Bird View</p>
+                <div class="panel-block"></div>
+            </nav>
+        </div>
+        <div class="vertical-container column  mt-5 is-fullheight is-6">
+            <nav class="panel">
+                <p class="panel-heading has-text-black has-background-light">Filter</p>
+                <div class="panel-block is-flex-direction-column">
+                    <form class="filter-form is-flex" action="#" method="post">
+                        <input id="search-input"
+                               class="input"
+                               type="text"
+                               placeholder="Search"
+                               name="query" />
+                        <input type="submit" value="Search" class="button" />
+                    </form>
+                    <hr />
+                    <form id="filter-form"
+                          class="filter-form is-flex is-flex-direction-row"
+                          method="post"
+                          action="#">
+                        <input name="attribute"
+                               id="filter-attribute-input"
+                               class="input"
+                               type="text"
+                               placeholder="Attribute" />
+                        <div class="select">
+                            <select name="operator">
+                                <option>==</option>
+                                <option>>=</option>
+                            </select>
+                        </div>
+                        <input name="value"
+                               id="filter-value-input"
+                               class="input"
+                               type="text"
+                               placeholder="Value" />
+                        <input type="submit" value="Filter" class="button" />
+                    </form>
+                </div>
+            </nav>
+            <nav class="panel">
+                <p class="panel-heading has-text-black has-background-light">Main View</p>
+                <div class="panel-block"></div>
+            </nav>
+        </div>
+    </section>
 {% endblock %}

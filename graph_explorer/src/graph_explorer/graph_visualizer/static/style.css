@@ -1,0 +1,14 @@
+.card {
+  margin-top: 10px;
+}
+
+.card.is-selected {
+  background-color: #f4f4f9; /* Light greyish-blue background */
+  border-left: 5px solid #3273dc; /* Blue border on the left */
+  border-right: 5px solid #3273dc; /* Blue border on the left */
+}
+
+.filter-form {
+  width: 100%;
+  gap: 5px;
+}

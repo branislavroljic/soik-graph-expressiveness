@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path('temp', views.temp, name="temp"),
     path("visualization/plugin/<str:id>", views.visualize, name="visualization_plugin"),
     # path("visualization/plugin/<str:id>", views.visualize, name="visualization_plugin"),
     # # path("loading/plugin/<str:id>", views.load, name="visualization_plugin"),

@@ -7,6 +7,11 @@ from django.shortcuts import render
 def index(request):
     return HttpResponse("Hello, world. You're at the graph index.")
 
+
+def temp(request):
+    return render(request, "index.html")
+
+
 def visualize(request, id):
     app_config = apps.get_app_config("graph_visualizer")
     plugins_visualization = app_config.plugins_visualization
