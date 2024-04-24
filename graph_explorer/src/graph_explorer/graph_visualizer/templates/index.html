@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}Index - {{ block.super }}{% endblock %}
-{% block header %}Welcome to the Index Page{% endblock %}
+{% comment %} {% block header %}Welcome to the Index Page{% endblock %} {% endcomment %}
 {% block content %}
     {% comment %} <p>Hello, {{ name }}!</p> {% endcomment %}
     {% comment %} {{ simple_visualizer|safe|escape }} {% endcomment %}
@@ -8,65 +8,57 @@
         <aside class="column is-3 is-narrow-mobile is-fullheight section is-hidden-mobile">
             <p class="menu-label is-hidden-touch">Workspaces</p>
             <ul class="menu-list">
-                <li>
-                    <a href="#" class="">
-                        <div class="card is-selected">
-                            <header class="card-header  is-flex is-align-items-center is-justify-content-center">
-                                <p class="card-header-title">Card Title</p>
-                                <div class="is-flex pr-2">
-                                    <a href="#" class="card-header-icon" aria-label="edit">
-                                        <span class="icon">
-                                            <i class="fas fa-edit"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="card-header-icon" aria-label="delete">
-                                        <span class="icon  has-text-danger">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                            </header>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="">
-                        <div class="card">
-                            <header class="card-header  is-flex is-align-items-center is-justify-content-center">
-                                <p class="card-header-title">Card Title</p>
-                                <div class="is-flex pr-2">
-                                    <a href="#" class="card-header-icon" aria-label="edit">
-                                        <span class="icon">
-                                            <i class="fas fa-edit"></i>
-                                        </span>
-                                    </a>
-                                    <a href="#" class="card-header-icon" aria-label="delete">
-                                        <span class="icon  has-text-danger">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                            </header>
-                        </div>
-                    </a>
-                </li>
+                {% for workspace in workspaces %}
+                    <li>
+                        <a href="{% url 'workspace' workspace.id %}" class="">
+                            <div class="card {% if workspace.is_active %}is-selected{% endif %}">
+                                <header class="card-header  is-flex is-align-items-center is-justify-content-center">
+                                    <p class="card-header-title">{{ workspace.name }}</p>
+                                    <div class="is-flex pr-2">
+                                        <a href="#" class="card-header-icon" aria-label="edit">
+                                            <span class="icon">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                        </a>
+                                        <a href="#" class="card-header-icon" aria-label="delete">
+                                            <span class="icon  has-text-danger">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </header>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
             </ul>
         </aside>
         <div class="vertical-container column  mt-5 is-fullheight is-3 ">
             <nav class="panel">
                 <p class="panel-heading has-text-black has-background-light">Visualizer</p>
                 <div class="panel-block">
-                    <div class="select is-rounded is-fullwidth">
-                        <select>
-                            <option>Simple visualizer</option>
-                            <option>Block visualizer</option>
-                        </select>
-                    </div>
+                    {% if visualizers %}
+                        <div class="select is-rounded is-fullwidth">
+                            <select onChange="onVisualizerChange(this.value)">
+                                <option value="" disabled selected hidden>Select Visualizer</option>
+                                {% for visualizer in visualizers %}
+                                    <option value="{{ visualizer.id }}"
+                                            {% if visualizer.id == selected_visualizer_id %}selected{% endif %}>
+                                        {{ visualizer.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% else %}
+                        <h3>No visualizer plugins found</h3>
+                    {% endif %}
                 </div>
             </nav>
             <nav class="panel">
                 <p class="panel-heading has-text-black has-background-light">Tree View</p>
-                <div class="panel-block"></div>
+                <div class="panel-block">
+                    <h3>Tree view</h3>
+                </div>
             </nav>
             <nav class="panel">
                 <p class="panel-heading has-text-black has-background-light">Bird View</p>
@@ -97,8 +89,14 @@
                                placeholder="Attribute" />
                         <div class="select">
                             <select name="operator">
-                                <option>==</option>
-                                <option>>=</option>
+                                <option value="" disabled selected hidden>Select Operator...</option>
+                                <option value="eq">=</option>
+                                <option value="gt">&#62;</option>
+                                <option value="ge">&#62;=</option>
+                                <option value="lt">&#60;</option>
+                                <option value="le">&#60;=</option>
+                                <option value="ne">!=</option>
+                                <option value="xor">xor</option>
                             </select>
                         </div>
                         <input name="value"
