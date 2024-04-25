@@ -23,6 +23,6 @@ def load_plugins(group_name):
     for ep in pkg_resources.iter_entry_points(group=group_name):
         p = ep.load()
         print("{} {}".format(ep.name, p))
-        plugin = p()
-        plugins.append(plugin)
+        # plugin = p()
+        # plugins.append(plugin)
     return plugins
