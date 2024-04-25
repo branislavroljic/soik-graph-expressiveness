@@ -16,13 +16,28 @@ visualizers = [
     {"id": 2, "name": "Block visualizer"},
 ]
 
+main_view = {
+    "visualizer_id": 1,
+    "html": "<div>MV </div>",
+}
+bird_view = {
+    "visualizer_id": 1,
+      "html": "<div>BV </div>",
+}
+
+data_sources = [{"name": "XML", "id": 1}, {"name": "JSON", "id": 2}]
+
 
 # Create your views here.
 def index(request):
     return render(
         request,
         "index.html",
-        {"workspaces": workspaces, "visualizers": visualizers},
+        {
+            "workspaces": workspaces,
+            "visualizers": visualizers,
+            "data_sources": data_sources,
+        },
     )
 
 
@@ -38,7 +53,9 @@ def workspace(request, workspace_id):
         {
             "workspaces": workspaces,
             "visualizers": visualizers,
-            #"selected_visualizer_id": 1,
+            # "selected_visualizer_id": 1,
+            "bird_view": bird_view,
+            "main_view": main_view,
         },
     )
 
