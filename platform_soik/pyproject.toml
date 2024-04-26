@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "platform"
+dynamic = ["version"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Branislav Roljic"},
+]
