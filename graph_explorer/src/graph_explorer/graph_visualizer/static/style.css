@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+body {
+  height: 100vh;
+}
+
 li .card {
   margin-top: 10px;
 }
@@ -18,9 +22,23 @@ li .card.is-selected {
 }
 
 .side-panel {
-  height: 90vh;
+  height: 100vh;
 }
 
 .side-panel .panel-block {
-  height: 90%;
+  height: 95%;
+}
+
+.fit-parent {
+  height: 100%;
+  width: 100%;
+}
+
+svg {
+  height: 100%;
+  width: 100%;
+}
+
+.panel {
+  --bulma-panel-heading-padding: 0.4em 1.25em;
 }

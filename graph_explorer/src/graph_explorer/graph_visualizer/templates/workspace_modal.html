@@ -1,0 +1,87 @@
+<div id="workspace-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Configure workspace</p>
+            <button class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <form method="post"
+                  id="ws-form"
+                  class="is-flex is-flex-direction-column is-gap-2"
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+                <input name="ws-name" class="input" type="text" placeholder="Name" />
+                <div class="select is-rounded is-fullwidth">
+                    <select id="ws-data-source" name="ws-data-source">
+                        {% comment %} <option value="" disabled selected hidden>Select Datasource Type</option> {% endcomment %}
+                        {% comment %} {% for source in data_sources %}<option value="{{ source.name }}">{{ source.name }}</option>{% endfor %} {% endcomment %}
+                        {% for data_source in data_sources %}
+                            {% if selected_ds is None and forloop.first or selected_ds.name == data_source.name %}
+                                <option selected value="{{ data_source.id }}">{{ data_source.name }}</option>
+                            {% else %}
+                                <option value="{{ data_source.id }}">{{ data_source.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div id="ws-data-source-file" class="file has-name">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="ws-data-source-file" />
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">Choose a file…</span>
+                        </span>
+                        <span class="file-name">No file uploaded</span>
+                    </label>
+                </div>
+            </form>
+            <script>
+                const fileInput = document.querySelector("#ws-data-source-file input[type=file]");
+                fileInput.onchange = () => {
+                  if (fileInput.files.length > 0) {
+                    const fileName = document.querySelector("#ws-data-source-file .file-name");
+                    fileName.textContent = fileInput.files[0].name;
+                  }
+                };
+            </script>
+        </section>
+        <footer class="modal-card-foot is-justify-content-center">
+            <div class="buttons">
+                <button class="button is-success"  type="submit" form="ws-form">Save changes</button>
+                <button class="button">Cancel</button>
+            </div>
+        </footer>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('#ws-form').submit(function(e) {
+            e.preventDefault(); // Prevent default form submission
+    
+            var formData = new FormData(this); // Create a FormData object, passing the form as a context
+    
+            $.ajax({
+                url: '{% url "add_workspace" %}', // Set the URL to your Django view
+                type: 'POST',
+                data: formData,
+                contentType: false, // This is required for files
+                processData: false, // This is required for files
+                success: function(response) {
+                    document.getElementById('workspace-modal').classList.remove("is-active");
+                  //  alert('Workspace saved successfully');
+                  if (response.workspace_id) {
+                    window.location.href = '/graph/workspaces/' + response.workspace_id;
+                } else {
+                    alert('Workspace ID not found in response');
+                }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error saving workspace: ' + error);
+                }
+            });
+        });
+    });
+</script>

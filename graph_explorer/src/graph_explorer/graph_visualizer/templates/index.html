@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Index - {{ block.super }}{% endblock %}
+{% block title %}{{ block.super }}{% endblock %}
 {% block content %}
     {% comment %} <p>Hello, {{ name }}!</p> {% endcomment %}
     {% comment %} {{ simple_visualizer|safe|escape }} {% endcomment %}
@@ -12,16 +12,18 @@
                         {% for workspace in workspaces %}
                             <li>
                                 <a href="{% url 'workspace' workspace.id %}" class="">
-                                    <div class="card {% if workspace.is_active %}is-selected{% endif %}">
+                                    <div class="card {% if workspace.id == current_ws_id %}is-selected{% endif %}">
                                         <header class="card-header  is-flex is-align-items-center is-justify-content-center">
                                             <p class="card-header-title">{{ workspace.name }}</p>
                                             <div class="is-flex pr-2">
-                                                <a href="#" class="card-header-icon" aria-label="edit">
+                                                {% comment %} <a href="#" class="card-header-icon" aria-label="edit">
                                                     <span class="icon">
                                                         <i class="fas fa-edit"></i>
                                                     </span>
-                                                </a>
-                                                <a href="#" class="card-header-icon" aria-label="delete">
+                                                </a> {% endcomment %}
+                                                <a href="{% url 'delete-workspace' workspace.id %}"
+                                                   class="card-header-icon"
+                                                   aria-label="delete">
                                                     <span class="icon  has-text-danger">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </span>
@@ -37,7 +39,7 @@
                 </div>
             </nav>
         </aside>
-        <div class="vertical-container column  is-fullheight is-3 ">
+        <div class="vertical-container main column is-fullheight is-3 is-flex  is-flex-direction-column">
             <nav class="panel">
                 <p class="panel-heading has-text-black has-background-light">Visualizer</p>
                 <div class="panel-block">
@@ -47,7 +49,7 @@
                                 <option value="" disabled selected hidden>Select Visualizer</option>
                                 {% for visualizer in visualizers %}
                                     <option value="{{ visualizer.id }}"
-                                            {% if visualizer.id == selected_visualizer_id %}selected{% endif %}>
+                                            {% if visualizer.id == current_visualizer %}selected{% endif %}>
                                         {{ visualizer.name }}
                                     </option>
                                 {% endfor %}
@@ -58,13 +60,13 @@
                     {% endif %}
                 </div>
             </nav>
-            <nav class="panel">
+            <nav class="panel is-flex-grow-2">
                 <p class="panel-heading has-text-black has-background-light">Tree View</p>
                 <div class="panel-block">
                     <h3>Tree view</h3>
                 </div>
             </nav>
-            <nav class="panel">
+            <nav class="panel is-flex-grow-1">
                 <p class="panel-heading has-text-black has-background-light">Bird View</p>
                 <div class="panel-block">
                     {% if bird_view %}
@@ -75,53 +77,56 @@
                 </div>
             </nav>
         </div>
-        <div class="vertical-container column is-fullheight is-7">
-            <nav class="panel">
-                <p class="panel-heading has-text-black has-background-light">Filter</p>
-                <div class="panel-block is-flex-direction-column is-gap-2">
-                    <form class="filter-form is-flex" action="#" method="post">
-                        <input id="search-input"
-                               class="input"
-                               type="text"
-                               placeholder="Search"
-                               name="query" />
-                        <input type="submit" value="Search" class="button" />
-                    </form>
-                    <form id="filter-form"
-                          class="filter-form is-flex is-flex-direction-row"
-                          method="post"
-                          action="#">
-                        <input name="attribute"
-                               id="filter-attribute-input"
-                               class="input"
-                               type="text"
-                               placeholder="Attribute" />
-                        <div class="select">
-                            <select name="operator">
-                                <option value="" disabled selected hidden>Select Operator...</option>
-                                <option value="eq">=</option>
-                                <option value="gt">&#62;</option>
-                                <option value="ge">&#62;=</option>
-                                <option value="lt">&#60;</option>
-                                <option value="le">&#60;=</option>
-                                <option value="ne">!=</option>
-                                <option value="xor">xor</option>
-                            </select>
-                        </div>
-                        <input name="value"
-                               id="filter-value-input"
-                               class="input"
-                               type="text"
-                               placeholder="Value" />
-                        <input type="submit" value="Filter" class="button" />
-                    </form>
+        <div class="vertical-container column is-fullheight is-7 is-flex is-flex-direction-column">
+            <div class="card">
+                <div class="card-content">
+                    <div class="content is-flex is-flex-direction-column is-gap-1">
+                        <form class="filter-form is-flex" action="#" method="post">
+                            <input id="search-input"
+                                   class="input"
+                                   type="text"
+                                   placeholder="Search"
+                                   name="query" />
+                            <input type="submit" value="Search" class="button" />
+                        </form>
+                        <form id="filter-form"
+                              class="filter-form is-flex is-flex-direction-row"
+                              method="post"
+                              action="#">
+                            <input name="attribute"
+                                   id="filter-attribute-input"
+                                   class="input"
+                                   type="text"
+                                   placeholder="Attribute" />
+                            <div class="select">
+                                <select name="operator">
+                                    <option value="" disabled selected hidden>Select Operator...</option>
+                                    <option value="eq">=</option>
+                                    <option value="gt">&#62;</option>
+                                    <option value="ge">&#62;=</option>
+                                    <option value="lt">&#60;</option>
+                                    <option value="le">&#60;=</option>
+                                    <option value="ne">!=</option>
+                                    <option value="xor">xor</option>
+                                </select>
+                            </div>
+                            <input name="value"
+                                   id="filter-value-input"
+                                   class="input"
+                                   type="text"
+                                   placeholder="Value" />
+                            <input type="submit" value="Filter" class="button" />
+                        </form>
+                    </div>
                 </div>
-            </nav>
-            <nav class="panel">
+            </div>
+            {% comment %} </nav> {% endcomment %}
+            <nav class="panel is-flex-grow-1">
                 <p class="panel-heading has-text-black has-background-light">Main View</p>
-                <div class="panel-block">
-                    {% if main_view %}
-                        <div class="main-view" id="main-view-{{ main_view.visualizer_id }}">{{ main_view.html|safe }}</div>
+                <div class="panel-block fit-parent">
+                    {% if content %}
+                        <div class="main-view fit-parent"
+                             id="main-view-{{ main_view.visualizer_id }}">{{ content|safe }}</div>
                     {% else %}
                         <h3>No workspace selected</h3>
                     {% endif %}
@@ -129,48 +134,5 @@
             </nav>
         </div>
     </section>
-    <div id="workspace-modal" class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Configure workspace</p>
-                <button class="delete" aria-label="close"></button>
-            </header>
-            <section class="modal-card-body is-flex is-flex-direction-column is-gap-2">
-                <div class="select is-rounded is-fullwidth">
-                    <select id="data-source-drop-down">
-                        <option value="" disabled selected hidden>Select Datasource</option>
-                        {% for source in data_sources %}<option value="{{ source.name }}">{{ source.name }}</option>{% endfor %}
-                    </select>
-                </div>
-                <div id="data-source-file" class="file has-name">
-                    <label class="file-label">
-                        <input class="file-input" type="file" name="resume" />
-                        <span class="file-cta">
-                            <span class="file-icon">
-                                <i class="fas fa-upload"></i>
-                            </span>
-                            <span class="file-label">Choose a file…</span>
-                        </span>
-                        <span class="file-name">No file uploaded</span>
-                    </label>
-                </div>
-                <script>
-                    const fileInput = document.querySelector("#data-source-file input[type=file]");
-                    fileInput.onchange = () => {
-                      if (fileInput.files.length > 0) {
-                        const fileName = document.querySelector("#data-source-file .file-name");
-                        fileName.textContent = fileInput.files[0].name;
-                      }
-                    };
-                </script>
-            </section>
-            <footer class="modal-card-foot is-justify-content-center">
-                <div class="buttons">
-                    <button class="button is-success">Save changes</button>
-                    <button class="button">Cancel</button>
-                </div>
-            </footer>
-        </div>
-    </div>
+    {% include "workspace_modal.html" %}
 {% endblock %}

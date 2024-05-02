@@ -1,84 +1,83 @@
 from django.apps.registry import apps
-from django.http import HttpResponseRedirect
+from django.http import (
+    HttpResponse,
+    HttpResponseNotFound,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.shortcuts import render
 from django.urls import reverse
 
-workspaces = [
-    {"id": 1, "name": "Workspace1", "is_active": False},
-    {"id": 2, "name": "Workspace2", "is_active": False},
-]
+from platform_soik.config import PlatformConfig
+from platform_soik.models import Workspace
 
-visualizers = [
-    {
-        "id": 1,
-        "name": "Simple visualizer",
-    },
-    {"id": 2, "name": "Block visualizer"},
-]
 
-main_view = {
-    "visualizer_id": 1,
-    "html": "<div>MV </div>",
-}
-bird_view = {
-    "visualizer_id": 1,
-      "html": "<div>BV </div>",
-}
-
-data_sources = [{"name": "XML", "id": 1}, {"name": "JSON", "id": 2}]
+platform_config: PlatformConfig = apps.get_app_config(
+    "graph_visualizer"
+).get_platform_config()
 
 
 # Create your views here.
 def index(request):
-    return render(
-        request,
-        "index.html",
-        {
-            "workspaces": workspaces,
-            "visualizers": visualizers,
-            "data_sources": data_sources,
-        },
-    )
+    return render(request, "index.html", platform_config.get_context())
 
 
 def workspace(request, workspace_id):
-    for w in workspaces:
-        if w["id"] == int(workspace_id):
-            w["is_active"] = True
-        else:
-            w["is_active"] = False
-    return render(
-        request,
-        "index.html",
-        {
-            "workspaces": workspaces,
-            "visualizers": visualizers,
-            # "selected_visualizer_id": 1,
-            "bird_view": bird_view,
-            "main_view": main_view,
-        },
-    )
+
+    if workspace_id not in list(map(lambda ws: ws.id, platform_config.workspaces)):
+        return HttpResponseNotFound("Workspace not found.")
+
+    platform_config.select_workspace(workspace_id)
+
+    context = platform_config.get_context()
+
+    return render(request, "index.html", context=context)
 
 
 def select_visualizer(_, visualizer_id):
-    print("selected visualizer: " + str(visualizer_id))
-    # TODO: handle visualizer change
+    # print("selected visualizer: " + str(visualizer_id))
+    platform_config.current_workspace.set_visualizer_plugin(visualizer_id=visualizer_id)
+    return HttpResponse()
+
+
+def add_workspace(request):
+
+    form_data = request.POST.dict()
+    print(form_data)
+    # data_sources_ids = get_data_sources_ids()
+    data_source_id = form_data.get("ws-data-source")
+    # if data_source_id is None:
+    #     datasource_name = data_sources[0]
+
+    workspace_name = form_data.get("ws-name")
+    # del form_data["workspace-name"]
+    # del form_data["csrfmiddlewaretoken"]
+
+    file = request.FILES.get("ws-data-source-file")
+
+    # try:
+    new_workspace = Workspace()
+    new_workspace.name = workspace_name
+    new_workspace.file = file
+    new_workspace.set_data_source_plugin(data_source_id)
+    new_workspace.set_visualizer_plugin("simple_graph_visualizer")
+    # except Exception as e:
+    #     return HttpResponse(f"Error: {str(e)}", status=400)
+
+    platform_config.add_workspace(new_workspace)
+
+    # return HttpResponseRedirect(
+    #     reverse("workspace", kwargs={"workspace_id": new_workspace.id})
+    # )
+    return JsonResponse({"workspace_id": new_workspace.id})
+
+
+def delete_workspace(self, workspace_id):
+    platform_config.delete_workspace(workspace_id)
     return HttpResponseRedirect(reverse("index"))
 
 
-def visualize(request, id):
-    app_config = apps.get_app_config("graph_visualizer")
-    plugins_visualization = app_config.plugins_visualization
-    visualization = None
-    for plugin in plugins_visualization:
-        if plugin.get_identifier() == id:
-            visualization = plugin.visualize(app_config.graph)
-            break
+# def get_data_sources_ids() -> list:
+#     loaders: list[Parser] = apps.get_app_config("graph_visualizer").plugins_loader
 
-    return render(
-        request,
-        "index.html",
-        {
-            "simple_visualizer": visualization,
-        },
-    )
+#     return list(map(lambda ds: ds.get_identifier(), loaders))

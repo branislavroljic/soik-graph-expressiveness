@@ -34,10 +34,14 @@ class Graph:
     def edges(self) -> Set[Edge]:
         return self._edges
 
+    @edges.setter
+    def edges(self, value: Set[Edge]):
+        self._edges = value
+
     @property
     def directed(self) -> bool:
         return self._directed
-    
+
     def remove_duplicates_in_edges(self):
         duplicates = []
         duplicates_id = []
