@@ -11,5 +11,5 @@ class GraphService(ABC):
 
 class Parser(GraphService):
     @abstractmethod
-    def load(self, path):
+    def load(self, file):
         pass
