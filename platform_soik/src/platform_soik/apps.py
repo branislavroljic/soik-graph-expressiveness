@@ -14,6 +14,6 @@ def _load_plugins(group_name):
 
 
 def load_plugins() -> tuple[list[Parser], list[VisualizerService]]:
-    plugins_loader = _load_plugins("graph.loader")
+    plugins_loader = _load_plugins("graph.datasources")
     plugins_visualization = _load_plugins("graph.visualization")
     return plugins_loader, plugins_visualization
