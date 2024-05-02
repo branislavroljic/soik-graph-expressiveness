@@ -12,16 +12,18 @@
                         {% for workspace in workspaces %}
                             <li>
                                 <a href="{% url 'workspace' workspace.id %}" class="">
-                                    <div class="card {% if workspace.is_active %}is-selected{% endif %}">
+                                    <div class="card {% if workspace.id == current_ws_id %}is-selected{% endif %}">
                                         <header class="card-header  is-flex is-align-items-center is-justify-content-center">
                                             <p class="card-header-title">{{ workspace.name }}</p>
                                             <div class="is-flex pr-2">
-                                                <a href="#" class="card-header-icon" aria-label="edit">
+                                                {% comment %} <a href="#" class="card-header-icon" aria-label="edit">
                                                     <span class="icon">
                                                         <i class="fas fa-edit"></i>
                                                     </span>
-                                                </a>
-                                                <a href="#" class="card-header-icon" aria-label="delete">
+                                                </a> {% endcomment %}
+                                                <a href="{% url 'delete-workspace' workspace.id %}"
+                                                   class="card-header-icon"
+                                                   aria-label="delete">
                                                     <span class="icon  has-text-danger">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </span>
@@ -47,7 +49,7 @@
                                 <option value="" disabled selected hidden>Select Visualizer</option>
                                 {% for visualizer in visualizers %}
                                     <option value="{{ visualizer.id }}"
-                                            {% if visualizer.id == selected_visualizer_id %}selected{% endif %}>
+                                            {% if visualizer.id == current_visualizer %}selected{% endif %}>
                                         {{ visualizer.name }}
                                     </option>
                                 {% endfor %}
