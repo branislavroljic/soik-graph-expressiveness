@@ -13,4 +13,4 @@ authors = [
 ]
 
 [project.entry-points."graph.datasources"]
-json_datasource="src.json_parser.parser:JSONParser"
+json_datasource="json_parser.parser:JSONParser"
