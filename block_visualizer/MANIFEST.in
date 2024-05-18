@@ -1,1 +1,1 @@
-include visualizer/static/*.html
+global-include *.html

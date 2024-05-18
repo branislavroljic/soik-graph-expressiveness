@@ -13,4 +13,4 @@ authors = [
 ]
 
 [project.entry-points."graph.datasources"]
-xml_datasource = "src.xml_parser.parser:XMLParser"
+xml_datasource = "xml_parser.parser:XMLParser"
