@@ -40,7 +40,6 @@
     let primarySvgContent = primarySvg.html();
 
     primarySvg.select("#svg-border").remove();
-
     let width = primarySvg.node().clientWidth;
     let height = primarySvg.node().clientHeight;
     let padding = 10;
@@ -73,7 +72,6 @@
     let scaleFactorY = birdViewHeight / boundingBox.height;
 
     let scaleFactor = Math.min(scaleFactorX, scaleFactorY);
-
     let offsetX = boundingBox.x * scaleFactor;
     let offsetY = boundingBox.y * scaleFactor;
     let translation = [
