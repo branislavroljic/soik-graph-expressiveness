@@ -26,3 +26,16 @@ class Node:
         if not self._data:
             return ""
         return "\n".join(f"{key}: {value}" for key, value in self._data.items())
+
+    def __contains__(self, givenValue):
+        if givenValue in self.id:
+            return True
+        for key, value in self._data.items():
+            if str(givenValue) in key:
+                return True
+            if str(givenValue) in value:
+                return True
+        return False
+
+
+

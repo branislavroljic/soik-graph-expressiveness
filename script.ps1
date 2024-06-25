@@ -8,7 +8,7 @@ pip install ".\simple_visualizer\"
 
 pip install ".\block_visualizer\"
 
-pip install ".\xml_datasource\"
+#pip install ".\xml_datasource\"
 
 pip install ".\json_datasource\"
 
