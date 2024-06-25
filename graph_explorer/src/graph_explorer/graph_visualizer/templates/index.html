@@ -63,14 +63,18 @@
             <nav class="panel is-flex-grow-2">
                 <p class="panel-heading has-text-black has-background-light">Tree View</p>
                 <div class="panel-block">
-                    <h3>Tree view</h3>
+                    {% if tree_view %}
+                        <div class="main-view" id="tree-view-{{ tree_view.visualizer_id }}">{{ tree_view.html|safe }}</div>
+                    {% else %}
+                        <h3>No workspace selected</h3>
+                    {% endif %}
                 </div>
             </nav>
-            <nav class="panel is-flex-grow-1">
+            <nav class="panel is-flex-grow-1" id="bird-view">
                 <p class="panel-heading has-text-black has-background-light">Bird View</p>
                 <div class="panel-block">
-                    {% if bird_view %}
-                        <div class="main-view" id="bird-view-{{ bird_view.visualizer_id }}">{{ bird_view.html|safe }}</div>
+                    {%if content %}
+                        {% include "bird_view.html" %}
                     {% else %}
                         <h3>No workspace selected</h3>
                     {% endif %}

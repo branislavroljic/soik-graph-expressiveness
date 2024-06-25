@@ -4,7 +4,6 @@ from api.models.node import Node
 from api.models.edge import Edge
 from api.services.loader import Parser
 
-
 class XMLParser(Parser):
     def __init__(self):
         self._nodes = {}
@@ -21,8 +20,7 @@ class XMLParser(Parser):
         try:
             tree = ET.parse(file)
             root = tree.getroot()
-            root_data = self._get_root(root)
-            self._parse_nodes(root_data)
+            self._parse_nodes(root)
             self._make_edges()
             self._graph.edges = set(self._graph.edges)
             self._graph.remove_duplicates_in_edges()
@@ -31,13 +29,6 @@ class XMLParser(Parser):
         except FileNotFoundError:
             print("File does not exist")
             raise FileNotFoundError("XML file not found!")
-
-    def _get_root(self, data):
-        data.set('id', 'root')
-        self._add_ref_attr(data)
-        for child in list(data):
-            self._set_ref_to_parent(child, data)
-        return data
 
     def _set_ref_to_parent(self, child, parent):
         if child is not None:
@@ -54,18 +45,12 @@ class XMLParser(Parser):
             if '@ref' not in parent.attrib:
                 parent.attrib['@ref'] = ''
 
-    def _delete_attr(self, parent, attr_for_deleting):
-        for attribute in attr_for_deleting:
-            if attribute in parent.attrib:
-                del parent.attrib[attribute]
-        return parent
-
-    def _make_node(self, parent):
-        if 'id' not in parent.attrib:
-            parent.set('id', 'value_' + str(self._counter))
+    def _make_node(self, element):
+        if 'id' not in element.attrib:
+            element.set('id', 'value_' + str(self._counter))
             self._counter += 1
-        id_p = parent.get('id')
-        node = Node(id_p, self._element_to_dict(parent))
+        id_p = element.get('id')
+        node = Node(id_p, self._element_to_dict(element))
         if node is not None:
             self._graph.nodes.add(node)
             self._nodes[id_p] = node
@@ -81,26 +66,15 @@ class XMLParser(Parser):
                         self._graph.edges.add(edge)
                 del parent_node.data['@ref']
 
-    def _parse_nodes(self, parent):
-        attr_for_deleting = []
-        self._add_ref_attr(parent)
-        if parent is not None:
-            for key, value in parent.attrib.items():
-                if isinstance(value, str) and value.startswith('value_'):
-                    self._set_ref_to_parent(parent, parent)
-                    attr_for_deleting.append(key)
-
-            for child in list(parent):
-                self._set_ref_to_parent(child, parent)
-                self._make_node(child)  # Only create nodes for direct children
-
-            parent = self._delete_attr(parent, attr_for_deleting)
-            self._make_node(parent)
+    def _parse_nodes(self, element):
+        self._add_ref_attr(element)
+        for child in list(element):
+            self._set_ref_to_parent(child, element)
+            self._parse_nodes(child)
+        self._make_node(element)
 
     def _element_to_dict(self, element):
-        data = {}
-        for child in list(element):
-            data[child.tag] = child.text
+        data = {child.tag: child.text for child in list(element)}
         data.update(element.attrib)
         data['tag'] = element.tag
         return data
