@@ -1,12 +1,12 @@
 # cd ".."
-# .\graph_visualizer\.venv\Scripts\activate
+#.\graph_visualizer\.venv\Scripts\activate
 pip install ".\api_soik\"
 
 pip install ".\simple_visualizer\"
 
 pip install ".\block_visualizer\"
 
-pip install ".\xml_datasource\"
+#pip install ".\xml_datasource\"
 
 pip install ".\json_datasource\"
 

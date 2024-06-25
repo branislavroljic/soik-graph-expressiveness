@@ -30,7 +30,7 @@ class JSONParser(Parser):
                 self._parse_nodes(root_data)
                 # Make edges after all nodes and references between nodes are created
                 self._make_edges()
-                self._graph.edges = set(self._graph.edges)
+                self._graph.edges = set(self._graph.edges)  
                 self._graph.remove_duplicates_in_edges()
                 return self._graph
 
