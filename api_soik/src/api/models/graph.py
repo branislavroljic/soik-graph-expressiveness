@@ -47,7 +47,6 @@ class Graph:
         duplicates_id = []
         new_edges = self._edges
         for edge in self._edges:
-            print(edge.id)
             for new_edge in new_edges:
                 if edge.equal_undirected(new_edge) and new_edge.id not in duplicates_id:
                     duplicates.append(edge)

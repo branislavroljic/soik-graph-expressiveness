@@ -16,11 +16,6 @@
                                         <header class="card-header  is-flex is-align-items-center is-justify-content-center">
                                             <p class="card-header-title">{{ workspace.name }}</p>
                                             <div class="is-flex pr-2">
-                                                {% comment %} <a href="#" class="card-header-icon" aria-label="edit">
-                                                    <span class="icon">
-                                                        <i class="fas fa-edit"></i>
-                                                    </span>
-                                                </a> {% endcomment %}
                                                 <a href="{% url 'delete-workspace' workspace.id %}"
                                                    class="card-header-icon"
                                                    aria-label="delete">
@@ -73,7 +68,7 @@
             <nav class="panel is-flex-grow-1" id="bird-view">
                 <p class="panel-heading has-text-black has-background-light">Bird View</p>
                 <div class="panel-block">
-                    {%if content %}
+                    {% if content %}
                         {% include "bird_view.html" %}
                     {% else %}
                         <h3>No workspace selected</h3>
@@ -91,7 +86,7 @@
                                    type="text"
                                    placeholder="Search"
                                    name="query" />
-                            <input type="submit" value="Search" class="button" onclick="search()"/>
+                            <input type="submit" value="Search" class="button" onclick="search()" />
                         </form>
                         <form id="filter-form"
                               class="filter-form is-flex is-flex-direction-row"
@@ -118,16 +113,16 @@
                                    class="input"
                                    type="text"
                                    placeholder="Value" />
-                            <input type="submit" value="Filter" class="button" onclick="filter()"/>
+                            <input type="submit" value="Filter" class="button" onclick="filter()" />
                         </form>
-                        <input type="submit" value="Reset" class="button" onclick="reset()"/>
+                        <input type="submit" value="Reset" class="button" onclick="reset()" />
                     </div>
                 </div>
             </div>
             {% comment %} </nav> {% endcomment %}
             <nav class="panel is-flex-grow-1">
                 <p class="panel-heading has-text-black has-background-light">Main View</p>
-                <div class="panel-block fit-parent">
+                <div class="panel-block fit-parent" style="padding : 0; height : 92%">
                     {% if content %}
                         <div class="main-view fit-parent"
                              id="main-view-{{ main_view.visualizer_id }}">{{ content|safe }}</div>

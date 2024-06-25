@@ -9,18 +9,17 @@ from visualizer.code.simple_visualization import SimpleGraphVisualizer
 from json_parser.parser import JSONParser
 from platform_soik.filters import search
 from platform_soik.filters import filter
-#from xml_parser.parser import XMLParser
+from xml_parser.parser import XMLParser
 
 data_source_plugins = {
-    JSONParser().get_identifier(): JSONParser(),
-    #XMLParser().get_identifier(): XMLParser(),
+    JSONParser().get_identifier(): JSONParser,
+    XMLParser().get_identifier(): XMLParser,
 }
 
 visualizer_plugins = {
-    SimpleGraphVisualizer().get_identifier(): SimpleGraphVisualizer(),
-    BlockGraphVisualizer().get_identifier(): BlockGraphVisualizer(),
+    SimpleGraphVisualizer().get_identifier(): SimpleGraphVisualizer,
+    BlockGraphVisualizer().get_identifier(): BlockGraphVisualizer,
 }
-
 
 class Workspace:
 
@@ -41,7 +40,7 @@ class Workspace:
         return self.__id
 
     @property
-    def name(self) -> int:
+    def name(self) -> str:
         return self.__name
 
     @name.setter
@@ -60,17 +59,9 @@ class Workspace:
     def data_source_plugin(self) -> Parser:
         return self.__data_source_plugin
 
-    # @data_source_plugin.setter
-    # def data_source_plugin(self, value):
-    #     self.__data_source_plugin = value
-
     @property
     def visualizer_plugin(self) -> VisualizerService:
         return self.__visualizer_plugin
-
-    # @visualizer_plugin.setter
-    # def visualizer_plugin(self, value):
-    #     self.__visualizer_plugin = value
 
     @property
     def search_param(self) -> str:
@@ -89,24 +80,24 @@ class Workspace:
         self.__filter_params = value
 
     @property
-    def graph(self) -> str:
+    def graph(self) -> Graph:
         return self.__graph
 
     @property
-    def initial_graph(self) -> str:
+    def initial_graph(self) -> Graph:
         return self.__initial_graph
 
     def set_data_source_plugin(self, data_source_id: str) -> None:
         if data_source_id not in data_source_plugins:
             raise ValueError("Invalid data source type")
-        self.__data_source_plugin = data_source_plugins[data_source_id]
+        self.__data_source_plugin = data_source_plugins[data_source_id]()
         self.__initial_graph = self.__data_source_plugin.load(self.__file)
         self.__graph = copy.deepcopy(self.__initial_graph, self.__memo)
 
     def set_visualizer_plugin(self, visualizer_id: str) -> None:
         if visualizer_id not in visualizer_plugins:
             raise ValueError("Invalid visualizer type")
-        self.__visualizer_plugin = visualizer_plugins[visualizer_id]
+        self.__visualizer_plugin = visualizer_plugins[visualizer_id]()
 
     def search_graph(self):
         graph = Graph
