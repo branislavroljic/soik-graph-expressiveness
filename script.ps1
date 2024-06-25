@@ -1,5 +1,7 @@
 # cd ".."
-#.\graph_visualizer\.venv\Scripts\activate
+# .\graph_visualizer\.venv\Scripts\activate
+pip install -r requirements.txt
+
 pip install ".\api_soik\"
 
 pip install ".\simple_visualizer\"
@@ -14,4 +16,3 @@ pip install ".\platform_soik\"
 
 # cd "graph_visualizer"
 python .\graph_explorer\src\graph_explorer\manage.py runserver
-
