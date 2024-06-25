@@ -10,7 +10,6 @@ from api.services.visualizer import VisualizerService
 class SimpleGraphVisualizer(VisualizerService):
     def __init__(self):
         path = join(dirname(dirname(abspath(__file__))), "static")
-        print(path)
         env = Environment(
             loader=FileSystemLoader(path),
             autoescape=select_autoescape(enabled_extensions=("html", "xml")),
@@ -27,7 +26,6 @@ class SimpleGraphVisualizer(VisualizerService):
 
         nodes = self.parse_nodes(graph)
         edges = self.parse_edges(graph)
-        print(len(nodes))
 
         return self.template.render(
             nodes=nodes,
@@ -101,7 +99,7 @@ if __name__ == "__main__":
     mock_graph = MockGraph()
     html_output = visualizer.visualize(mock_graph.load_graph())
     html_output = visualizer.visualize(mock_graph.load_graph())
-    
+
     # Write the HTML content to a file
     with open("graph_visualization.html", "w") as html_file:
         html_file.write(html_output)

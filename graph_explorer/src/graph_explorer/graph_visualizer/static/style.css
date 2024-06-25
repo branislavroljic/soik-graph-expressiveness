@@ -43,6 +43,10 @@ svg {
   --bulma-panel-heading-padding: 0.4em 1.25em;
 }
 
+#content {
+  height: 100vh;
+}
+
 #bird-view {
   display: flex;
   flex-direction: column;

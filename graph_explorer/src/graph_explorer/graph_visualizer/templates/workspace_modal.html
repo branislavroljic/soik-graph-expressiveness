@@ -73,7 +73,7 @@
                     document.getElementById('workspace-modal').classList.remove("is-active");
                   //  alert('Workspace saved successfully');
                   if (response.workspace_id) {
-                    window.location.href = '/graph/workspaces/' + response.workspace_id;
+                    window.location.href = '/workspaces/' + response.workspace_id;
                 } else {
                     alert('Workspace ID not found in response');
                 }
