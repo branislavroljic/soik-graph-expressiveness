@@ -11,6 +11,67 @@ function onVisualizerChange(visualizer_id) {
   }
 }
 
+function filter() {
+  var filter_attribute = document.getElementById("filter-attribute-input").value;
+  var filter_operator = document.getElementById("filter_operator").value;
+  var filter_value = document.getElementById("filter-value-input").value;
+  console.log('Search value:');
+  if (filter_attribute && filter_operator && filter_value) {
+    var url = new URL(window.location.href);
+    var params = new URLSearchParams(url.search);
+    params.set('filter_value', filter_value);
+    params.set('filter_operator', filter_operator);
+    params.set('filter_attribute', filter_attribute);
+    part_url = "/filter"
+    $.ajax({
+      url: `${url.origin}${url.pathname}${part_url}?${params.toString()}`,
+      type: 'GET',
+      success: function (response) {
+        //console.log('Search Results:', response);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.error('Bad filter input');
+      }
+    });
+  }
+}
+
+function search() {
+  var searchValue = document.getElementById("search-input").value;
+  console.log('Search value:');
+  if (searchValue) {
+    var url = new URL(window.location.href);
+    var params = new URLSearchParams(url.search);
+    params.set('src', searchValue);
+    part_url = "/search"
+    $.ajax({
+      url: `${url.origin}${url.pathname}${part_url}?${params.toString()}`,
+      type: 'GET',
+      success: function (response) {
+        //console.log('Search Results:', response);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        //console.error('Error:', textStatus, errorThrown);
+      }
+    });
+  }
+}
+
+function reset() {
+  var url = new URL(window.location.href);
+  part_url = "/reset"
+  $.ajax({
+    url: `${url.origin}${url.pathname}${part_url}`,
+    type: 'GET',
+    success: function (response) {
+      location.reload();
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      console.error('Error:', textStatus, errorThrown);
+    }
+  });
+}
+
 // Modal
 
 document.addEventListener("DOMContentLoaded", () => {

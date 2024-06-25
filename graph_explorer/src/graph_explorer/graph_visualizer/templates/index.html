@@ -81,17 +81,16 @@
             <div class="card">
                 <div class="card-content">
                     <div class="content is-flex is-flex-direction-column is-gap-1">
-                        <form class="filter-form is-flex" action="#" method="post">
+                        <form class="filter-form is-flex">
                             <input id="search-input"
                                    class="input"
                                    type="text"
                                    placeholder="Search"
                                    name="query" />
-                            <input type="submit" value="Search" class="button" />
+                            <input type="submit" value="Search" class="button" onclick="search()"/>
                         </form>
                         <form id="filter-form"
                               class="filter-form is-flex is-flex-direction-row"
-                              method="post"
                               action="#">
                             <input name="attribute"
                                    id="filter-attribute-input"
@@ -99,7 +98,7 @@
                                    type="text"
                                    placeholder="Attribute" />
                             <div class="select">
-                                <select name="operator">
+                                <select name="operator" id="filter_operator">
                                     <option value="" disabled selected hidden>Select Operator...</option>
                                     <option value="eq">=</option>
                                     <option value="gt">&#62;</option>
@@ -107,7 +106,7 @@
                                     <option value="lt">&#60;</option>
                                     <option value="le">&#60;=</option>
                                     <option value="ne">!=</option>
-                                    <option value="xor">xor</option>
+                                    <!-- <option value="xor">xor</option> -->
                                 </select>
                             </div>
                             <input name="value"
@@ -115,8 +114,9 @@
                                    class="input"
                                    type="text"
                                    placeholder="Value" />
-                            <input type="submit" value="Filter" class="button" />
+                            <input type="submit" value="Filter" class="button" onclick="filter()"/>
                         </form>
+                        <input type="submit" value="Reset" class="button" onclick="reset()"/>
                     </div>
                 </div>
             </div>

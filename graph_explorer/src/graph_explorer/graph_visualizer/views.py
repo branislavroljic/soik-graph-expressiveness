@@ -12,6 +12,7 @@ from platform_soik.config import PlatformConfig
 from platform_soik.models import Workspace
 
 
+
 platform_config: PlatformConfig = apps.get_app_config(
     "graph_visualizer"
 ).get_platform_config()
@@ -75,6 +76,31 @@ def add_workspace(request):
 def delete_workspace(self, workspace_id):
     platform_config.delete_workspace(workspace_id)
     return HttpResponseRedirect(reverse("index"))
+
+
+def filter(request, workspace_id ):    
+    params = {}
+    params['filter_value'] = request.GET.get('filter_value') 
+    params['filter_operator'] = request.GET.get('filter_operator') 
+    params['filter_attribute'] = request.GET.get('filter_attribute')
+    current_workspace = platform_config.select_workspace(workspace_id)
+    current_workspace.filter_params = params
+    current_workspace.filter_graph()
+    return HttpResponse()
+
+def search(request, workspace_id):
+
+    search_word = request.GET.get('src')    
+    current_workspace = platform_config.select_workspace(workspace_id)
+    current_workspace.search_param = search_word
+    current_workspace.search_graph()
+    return HttpResponse()
+
+
+def reset(_, workspace_id):
+    current_workspace = platform_config.select_workspace(workspace_id)
+    current_workspace.reset_graph()
+    return HttpResponse()
 
 
 # def get_data_sources_ids() -> list:

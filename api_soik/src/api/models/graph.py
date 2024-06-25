@@ -17,13 +17,13 @@ class Graph:
     def remove_node(self, node: Node):
         self._nodes.remove(node)
         self._edges = {
-            edge for edge in self._edges if node not in (edge.source, edge.dest)
+            edge for edge in self._edges if node not in (edge.source, edge.destination)
         }
 
     def add_edge(self, edge: Edge):
         self._edges.add(edge)
         if not self._directed:
-            inverted_edge = Edge(edge.dest, edge.source)
+            inverted_edge = Edge(edge.destination, edge.source)
             self._edges.add(inverted_edge)
 
     @property
