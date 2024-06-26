@@ -1,10 +1,137 @@
 {% extends 'base.html' %}
-
-{% block title %}Index - {{ block.super }}{% endblock %}
-
-{% block header %}Welcome to the Index Page{% endblock %}
-
+{% block title %}{{ block.super }}{% endblock %}
 {% block content %}
-    <p>Hello, {{ name }}!</p>
-    {{ simple_visualizer|safe|escape }}
+    {% comment %} <p>Hello, {{ name }}!</p> {% endcomment %}
+    {% comment %} {{ simple_visualizer|safe|escape }} {% endcomment %}
+    <section class="columns is-fullheight">
+        <aside class="column is-2 is-narrow-mobile is-fullheight is-hidden-mobile">
+            <nav class="panel side-panel">
+                <p class="panel-heading has-text-black has-background-light">Workspaces</p>
+                <div class="panel-block is-flex-direction-column is-justify-content-space-between">
+                    <ul class="menu-list">
+                        {% for workspace in workspaces %}
+                            <li>
+                                <a href="{% url 'workspace' workspace.id %}" class="">
+                                    <div class="card {% if workspace.id == current_ws_id %}is-selected{% endif %}">
+                                        <header class="card-header  is-flex is-align-items-center is-justify-content-center">
+                                            <p class="card-header-title">{{ workspace.name }}</p>
+                                            <div class="is-flex pr-2">
+                                                <a href="{% url 'delete-workspace' workspace.id %}"
+                                                   class="card-header-icon"
+                                                   aria-label="delete">
+                                                    <span class="icon  has-text-danger">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </header>
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button class="js-modal-trigger button" data-target="workspace-modal">Create workspace</button>
+                </div>
+            </nav>
+        </aside>
+        <div class="vertical-container main column is-fullheight is-3 is-flex  is-flex-direction-column">
+            <nav class="panel">
+                <p class="panel-heading has-text-black has-background-light">Visualizer</p>
+                <div class="panel-block">
+                    {% if visualizers %}
+                        <div class="select is-rounded is-fullwidth">
+                            <select onChange="onVisualizerChange(this.value)">
+                                <option value="" disabled selected hidden>Select Visualizer</option>
+                                {% for visualizer in visualizers %}
+                                    <option value="{{ visualizer.id }}"
+                                            {% if visualizer.id == current_visualizer %}selected{% endif %}>
+                                        {{ visualizer.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% else %}
+                        <h3>No visualizer plugins found</h3>
+                    {% endif %}
+                </div>
+            </nav>
+            <nav class="panel is-flex-grow-2">
+                <p class="panel-heading has-text-black has-background-light">Tree View</p>
+                <div class="panel-block">
+                    {% if tree_view %}
+                        <div class="main-view" id="tree-view-{{ tree_view.visualizer_id }}">{{ tree_view.html|safe }}</div>
+                    {% else %}
+                        <h3>No workspace selected</h3>
+                    {% endif %}
+                </div>
+            </nav>
+            <nav class="panel is-flex-grow-1" id="bird-view">
+                <p class="panel-heading has-text-black has-background-light">Bird View</p>
+                <div class="panel-block">
+                    {% if content %}
+                        {% include "bird_view.html" %}
+                    {% else %}
+                        <h3>No workspace selected</h3>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+        <div class="vertical-container column is-fullheight is-7 is-flex is-flex-direction-column">
+            <div class="card">
+                <div class="card-content">
+                    <div class="content is-flex is-flex-direction-column is-gap-1">
+                        <form class="filter-form is-flex">
+                            <input id="search-input"
+                                   class="input"
+                                   type="text"
+                                   placeholder="Search"
+                                   name="query" />
+                            <input type="submit" value="Search" class="button" onclick="search()" />
+                        </form>
+                        <form id="filter-form"
+                              class="filter-form is-flex is-flex-direction-row"
+                              action="#">
+                            <input name="attribute"
+                                   id="filter-attribute-input"
+                                   class="input"
+                                   type="text"
+                                   placeholder="Attribute" />
+                            <div class="select">
+                                <select name="operator" id="filter_operator">
+                                    <option value="" disabled selected hidden>Select Operator...</option>
+                                    <option value="eq">=</option>
+                                    <option value="gt">&#62;</option>
+                                    <option value="ge">&#62;=</option>
+                                    <option value="lt">&#60;</option>
+                                    <option value="le">&#60;=</option>
+                                    <option value="ne">!=</option>
+                                    <!-- <option value="xor">xor</option> -->
+                                </select>
+                            </div>
+                            <input name="value"
+                                   id="filter-value-input"
+                                   class="input"
+                                   type="text"
+                                   placeholder="Value" />
+                            <input type="submit" value="Filter" class="button" onclick="filter()" />
+                        </form>
+                        <input type="submit" value="Reset" class="button" onclick="reset()" />
+                    </div>
+                </div>
+            </div>
+            {% comment %} </nav> {% endcomment %}
+            <nav class="panel is-flex-grow-1">
+                <p class="panel-heading has-text-black has-background-light">Main View</p>
+                <div class="panel-block fit-parent" style="padding : 0; height : 92%">
+                    {% if content %}
+                        <div class="main-view fit-parent"
+                             id="main-view-{{ main_view.visualizer_id }}">{{ content|safe }}</div>
+                    {% else %}
+                        <h3>No workspace selected</h3>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </section>
+    {% include "workspace_modal.html" %}
 {% endblock %}
