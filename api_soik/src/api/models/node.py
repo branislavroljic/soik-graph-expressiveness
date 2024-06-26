@@ -33,6 +33,6 @@ class Node:
         for key, value in self._data.items():
             if str(givenValue) in key:
                 return True
-            if str(givenValue) in value:
+            if value is not None and str(givenValue) in value:
                 return True
         return False
