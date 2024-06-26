@@ -2,7 +2,6 @@ from .node import Node
 from .edge import Edge
 from typing import Set
 
-
 class Graph:
     def __init__(
         self, nodes: Set[Node] = None, edges: Set[Edge] = None, directed: bool = True

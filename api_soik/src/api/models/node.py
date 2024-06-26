@@ -36,6 +36,3 @@ class Node:
             if str(givenValue) in value:
                 return True
         return False
-
-
-

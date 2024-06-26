@@ -1,6 +1,5 @@
 from .node import Node
 
-
 class Edge:
     id_counter = 0
 
